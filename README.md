@@ -33,3 +33,10 @@ Pyserini is built on Python 3.10 (other versions might work, but YMMV) and Java 
 
 ## Data Preparation
 ### Data Preprocessing
+
+### Corpus Preprocessing
+
+## How do I search?
+### Single-stage Ranker
+
+### Two-stage Ranker
