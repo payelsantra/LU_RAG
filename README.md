@@ -52,7 +52,14 @@ Unnamed: 0,id,claim,label
 7,219028,Savages was exclusively a German film.,0
 ```
 ### Corpus Preprocessing
-
+Convert your corpus of the form:
+```
+{"id": 83235, "contents": "System of a Down briefly disbanded in limbo."}
+{"id": 149579, "contents": "Beautiful reached number two on the Billboard Hot 100 in 2003."}
+{"id": 229289, "contents": "Neal Schon was named in 1954."}
+{"id": 138117, "contents": "John Wick: Chapter 2 was theatrically released in the Oregon."}
+```
+save that corpus into ```/home/user/data/corpus/nei/NEI_bucket.jsonl```.
 ## How do I search?
 ### Single-stage Ranker
 For this paper, we uniformly retrieved the top 50 candidates.
