@@ -396,7 +396,7 @@ fl_p.close()
    --wiki_R_path "/home/user/result/bm25_test_ret_refute.pickle" \
    --wiki_NEI_path "/home/user/result/bm25_test_ret_nei.pickle" \
    --true_pred_dict_file "/home/user/result/3_class/icl_predicted_dict_shot.pickle"
-
+```
 
 ### U-RAG
 
