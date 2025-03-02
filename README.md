@@ -268,7 +268,7 @@ for query_id, query_text in id_claim_dict.items():
 
 ## Post-processing
 ### For Two-stage
-The post retrieval for BM25>>Contriever and BM25>>ColBERT are as follows:
+The post processing for BM25>>Contriever and BM25>>ColBERT are as follows:
 ```
 from tqdm import tqdm
 result_dict={}
@@ -289,7 +289,7 @@ fl_p=open("/home/user/result/bm25_ret/dense/bm25_dense_results.pickle","wb")
 pickle.dump(result_dict,fl_p)
 fl_p.close()
 ```
-The post retrieval for BM25>>MonoT5 is as follows:
+The post-processing for BM25>>MonoT5 is as follows:
 ```
 from tqdm import tqdm
 import json
