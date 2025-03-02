@@ -412,7 +412,7 @@ fl_p.close()
 ### LU-RAG
 
 ```
-!python3 LU_RAG_experiment.py \
+!python3 LUrag_experiment.py \
     --k give_the_corresponding_k_val\
     --m give_the_corresponding_m_val\
     --model "TheBloke/Llama-2-70B-Chat-AWQ" \
