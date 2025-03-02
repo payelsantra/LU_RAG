@@ -21,8 +21,10 @@ Please create a conda environment with all required packages, and activate the e
 $ conda create -n pyserini python==3.10
 $ conda activate pyserini
 ```
-We have used [pyserini](https://github.com/castorini/pyserini) for each search. \\
+We have used [pyserini](https://github.com/castorini/pyserini) for each search. 
+
 Install via PyPI:
 ```
 $ pip install pyserini
 ```
+Pyserini is built on Python 3.10 (other versions might work, but YMMV) and Java 21 (due to its dependency on [Anserini](https://github.com/castorini/anserini)).
