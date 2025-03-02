@@ -10,8 +10,8 @@ This repository allows the replication of all results reported in the papers. In
   - [Single-stage Ranker](#Single-stage)
   - [Two-stage Ranker](#Two-stage)
 -  [Replicating Results](#Replicating-Results)
-  - [Single-stage Ranker](#Single-stage)
-  - [L-RAG](#L-RAG)
+    - [L-RAG](#L-RAG)
+    - 
   - [U-RAG](#U-RAG)
   - [LU-RAG](#LU-RAG)
 
