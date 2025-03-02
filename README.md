@@ -11,7 +11,7 @@ This repository allows the replication of all results reported in the papers. In
   - [Two-stage Ranker](#Two-stage)
 -  [Replicating Results](#Replicating-Results)
     - [L-RAG](#L-RAG)
-    - 
-  - [U-RAG](#U-RAG)
-  - [LU-RAG](#LU-RAG)
+    - [U-RAG](#U-RAG)
+    - [LU-RAG](#LU-RAG)
+
 
