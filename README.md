@@ -134,4 +134,65 @@ sparse_searcher = LuceneSearcher('/home/user/data/index_file/nei/')
 encoder = TctColBertQueryEncoder('facebook/contriever-msmarco')
 dense_searcher = FaissSearcher('/home/user/data/dense_retrieval/indom/embedding_nei_dense1', encoder)
 hybrid_searcher = HybridSearcher(dense_searcher, sparse_searcher)
+
+import json
+evidence_text={}
+with open('/home/user/data/corpus/nei/NEI_bucket.jsonl','r',encoding='utf-8') as f:
+    for idx,line in enumerate(f):
+        json_obj=json.loads(line.strip())
+        evidence_text[json_obj['id']]=json_obj['contents']
+
+import pandas as pd
+
+test_data = pd.read_csv('/media/user/Expansion/phd_new/my_desktop/payel/Fact_verification/emnlp_extension/fever/data/shared_task_dev_fever_data.csv')
+
+# id_claim_dict=dict(zip(list(test_data['id']),list(test_data['claim'])))
+# id_label_dict=dict(zip(list(test_data['id']),list(test_data['label'])))
+test_data_claim=dict(zip(test_data['id'],test_data['claim']))
+test_data_label=dict(zip(test_data['id'],test_data['label']))
+
+
+results=[]
+top_k=50
+for index, row in test_data.iterrows():
+    query_id = row['id']
+    query = row['claim']
+    hits = hybrid_searcher.search(query,k=top_k)
+
+    # Store results for each query
+    for i in range(len(hits)):  # Limit to top 10 results
+        results.append({
+            'query_id': query_id,
+            'query': query,
+            'docid': hits[i].docid,
+            'score': hits[i].score
+        })
+        
+from collections import defaultdict
+query_dict = defaultdict(list)
+
+for entry in results:
+    query_dict[entry["query_id"]].append(entry["docid"])
+query_dict = dict(query_dict)
+```
+Post-processing is as follows:
+```
+from tqdm import tqdm
+result_dict={}
+for i in tqdm(query_dict):
+    query_id=i
+    for k,l in enumerate(query_dict[i]):
+        key=str(i)+"_"+str(k+1)
+        doc_id=l
+        evid=evidence_text[int(doc_id)].strip()
+        if query_id in result_dict:
+            result_dict[query_id][key] = [evid, doc_id,'NEI']
+        else:
+            result_dict[query_id]={}
+            result_dict[query_id][key]=[evid,doc_id,'NEI']
+
+import pickle
+fl_p=open("/home/user/result/bm25_ret/contriever/bm25_contriever_results.pickle","wb")
+pickle.dump(result_dict,fl_p)
+fl_p.close()
 ```
