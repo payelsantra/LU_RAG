@@ -388,13 +388,38 @@ fl_p.close()
 ## Replicating Results
 ### L-RAG
 ```
-#python3 ICL_3class_Scifact.py \
-#    --k give_the_corresponding_k_val\  
-#    --models "TheBloke/Llama-2-70B-Chat-AWQ" \
-#    --data_path "/home/user/data/data.csv" \
-#    --wiki_S_path "/home/user/result/bm25_test_ret_support.pickle" \
-#    --wiki_R_path "/home/user/result/bm25_test_ret_refute.pickle" \
-#    --wiki_NEI_path "/home/user/result/bm25_test_ret_nei.pickle"\
-#    --true_pred_dict_file "/home/user/result/3_class/icl_predicted_dict_shot.pickle"
+!python3 ICL_experiment.py \
+   --k give_the_corresponding_k_val \  
+   --models "TheBloke/Llama-2-70B-Chat-AWQ" \
+   --data_path "/home/user/data/data.csv" \
+   --wiki_S_path "/home/user/result/bm25_test_ret_support.pickle" \
+   --wiki_R_path "/home/user/result/bm25_test_ret_refute.pickle" \
+   --wiki_NEI_path "/home/user/result/bm25_test_ret_nei.pickle" \
+   --true_pred_dict_file "/home/user/result/3_class/icl_predicted_dict_shot.pickle"
 
+
+### U-RAG
+
+```
+!python3 RAG_experiment.py \
+     --k give_the_corresponding_k_val \
+     --models "TheBloke/Llama-2-70B-Chat-AWQ" \
+     --data_path "/home/user/data/data.csv" \
+     --wiki_retrieved_path  "/home/user/result/bm25_test_ret_wiki.pickle" \
+     --true_pred_dict_file "/home/user/result/3_class/rag_predicted_dict_shot.pickle"
+```
+
+### LU-RAG
+
+```
+!python3 LU_RAG_experiment.py \
+    --k give_the_corresponding_k_val\
+    --m give_the_corresponding_m_val\
+    --model "TheBloke/Llama-2-70B-Chat-AWQ" \
+    --data_path "/home/user/data/data.csv" \
+   --wiki_S_path "/home/user/result/bm25_test_ret_support.pickle" \
+   --wiki_R_path "/home/user/result/bm25_test_ret_refute.pickle" \
+   --wiki_NEI_path "/home/user/result/bm25_test_ret_nei.pickle" \
+    --wiki_retrieved_path  "/home/user/result/bm25_test_ret_wiki.pickle" \
+    --true_pred_dict_file "/home/user/result/3_class/LUrag_predicted_dict_0_wiki.pickle"
 ```
