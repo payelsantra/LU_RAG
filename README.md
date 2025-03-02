@@ -11,6 +11,8 @@ This repository allows the replication of all results reported in the papers. In
   - [Single-stage Ranker](#Single-stage)
   - [Two-stage Ranker](#Two-stage)
 - [Post-processing](#post-processing)
+  - [For Single-stage](#forSingle-stage)
+  - [For Two-stage](#forTwo-stage)
 -  [Replicating Results](#Replicating-Results)
     - [L-RAG](#L-RAG)
     - [U-RAG](#U-RAG)
@@ -144,10 +146,7 @@ with open('/home/user/data/corpus/nei/NEI_bucket.jsonl','r',encoding='utf-8') as
 
 import pandas as pd
 
-test_data = pd.read_csv('/media/user/Expansion/phd_new/my_desktop/payel/Fact_verification/emnlp_extension/fever/data/shared_task_dev_fever_data.csv')
-
-# id_claim_dict=dict(zip(list(test_data['id']),list(test_data['claim'])))
-# id_label_dict=dict(zip(list(test_data['id']),list(test_data['label'])))
+test_data = pd.read_csv(' /home/user/data/data.csv')
 test_data_claim=dict(zip(test_data['id'],test_data['claim']))
 test_data_label=dict(zip(test_data['id'],test_data['label']))
 
@@ -175,7 +174,13 @@ for entry in results:
     query_dict[entry["query_id"]].append(entry["docid"])
 query_dict = dict(query_dict)
 ```
-Post-processing is as follows:
+
+#### BM25»ColBERT
+
+
+
+## Post-processing
+### For Two-stage
 ```
 from tqdm import tqdm
 result_dict={}
