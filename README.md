@@ -14,4 +14,13 @@ This repository allows the replication of all results reported in the papers. In
     - [U-RAG](#U-RAG)
     - [LU-RAG](#LU-RAG)
 
-
+## Prerequisites
+We recommend running all the things in a Linux environment. 
+Please create a conda environment with all required packages, and activate the environment by the following commands:
+```
+$ conda create -n pyserini
+$ conda activate pyserini
+```
+```
+$ pip install pyserini
+```
