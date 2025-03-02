@@ -221,7 +221,7 @@ with open('/home/user/data/corpus/nei/NEI_bucket.jsonl','r',encoding='utf-8') as
 
 import pandas as pd
 
-test_data = pd.read_csv(' /home/user/data/data.csv')
+test_data = pd.read_csv('/home/user/data/data.csv')
 test_data_claim=dict(zip(test_data['id'],test_data['claim']))
 test_data_label=dict(zip(test_data['id'],test_data['label']))
 
@@ -383,4 +383,18 @@ import pickle
 fl_p=open("/home/user/result/bm25_ret/dense/bm25_monot5_results.pickle","wb")
 pickle.dump(result_dict,fl_p)
 fl_p.close()
+```
+
+## Replicating Results
+### L-RAG
+```
+#python3 ICL_3class_Scifact.py \
+#    --k give_the_corresponding_k_val\  
+#    --models "TheBloke/Llama-2-70B-Chat-AWQ" \
+#    --data_path "/home/user/data/data.csv" \
+#    --wiki_S_path "/home/user/result/bm25_test_ret_support.pickle" \
+#    --wiki_R_path "/home/user/result/bm25_test_ret_refute.pickle" \
+#    --wiki_NEI_path "/home/user/result/bm25_test_ret_nei.pickle"\
+#    --true_pred_dict_file "/home/user/result/3_class/icl_predicted_dict_shot.pickle"
+
 ```
