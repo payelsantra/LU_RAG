@@ -18,9 +18,11 @@ This repository allows the replication of all results reported in the papers. In
 We recommend running all the things in a Linux environment. 
 Please create a conda environment with all required packages, and activate the environment by the following commands:
 ```
-$ conda create -n pyserini
+$ conda create -n pyserini python==3.10
 $ conda activate pyserini
 ```
+We have used [pyserini](https://github.com/castorini/pyserini) for each search. \\
+Install via PyPI:
 ```
 $ pip install pyserini
 ```
