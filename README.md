@@ -389,7 +389,7 @@ fl_p.close()
 ### L-RAG
 ```
 !python3 ICL_experiment.py \
-   --k give_the_corresponding_k_val \  
+   --k give_the_corresponding_labeled_context \  
    --models "TheBloke/Llama-2-70B-Chat-AWQ" \
    --data_path "/home/user/data/data.csv" \
    --wiki_S_path "/home/user/result/bm25_test_ret_support.pickle" \
@@ -402,7 +402,7 @@ fl_p.close()
 
 ```
 !python3 RAG_experiment.py \
-     --k give_the_corresponding_k_val \
+     --k give_the_corresponding_unlabeled_context \
      --models "TheBloke/Llama-2-70B-Chat-AWQ" \
      --data_path "/home/user/data/data.csv" \
      --wiki_retrieved_path  "/home/user/result/bm25_test_ret_wiki.pickle" \
@@ -413,8 +413,8 @@ fl_p.close()
 
 ```
 !python3 LUrag_experiment.py \
-    --k give_the_corresponding_k_val\
-    --m give_the_corresponding_m_val\
+    --k give_the_corresponding_labeled_context\
+    --m give_the_corresponding_unlabeled_context\
     --model "TheBloke/Llama-2-70B-Chat-AWQ" \
     --data_path "/home/user/data/data.csv" \
    --wiki_S_path "/home/user/result/bm25_test_ret_support.pickle" \
