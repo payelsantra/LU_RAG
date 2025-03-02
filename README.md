@@ -60,6 +60,60 @@ For this paper, we uniformly retrieved the top 50 candidates.
 ```
 
 #### Contriever-E2E
+'''
+##indexing
+!python -m pyserini.encode \
+  input \
+    --corpus /home/user/data/corpus/nei/NEI_bucket.jsonl \
+    --fields text \
+    --delimiter "\n" \
+    --shard-id 0 \
+    --shard-num 1 \
+  output \
+    --embeddings /home/user/data/dense_retrieval/indom/embedding_nei_dense1 \
+    --to-faiss \
+  encoder \
+    --encoder facebook/contriever-msmarco \
+    --fields text \
+    --batch 32 \
+    --fp16
 
+#contriever
+!python -m pyserini.search.faiss \
+  --index /home/user/data/dense_retrieval/indom/embedding_nei_dense1 \
+  --topics /home/user/data/data.tsv \
+  --encoder facebook/contriever-msmarco \
+  --output /home/user/result/contriever_ret/nei_contriever_results.txt \
+  --batch-size 64 \
+  --threads 4 \
+  --hits 50
+'''
 #### ColBERT-E2E
+##indexing
+!python -m pyserini.encode \
+  input \
+    --corpus /home/user/data/corpus/nei/NEI_bucket.jsonl \
+    --fields text \
+    --delimiter "\n" \
+    --shard-id 0 \
+    --shard-num 1 \
+  output \
+    --embeddings /home/user/data/dense_retrieval/indom/embedding_nei_dense1 \
+    --to-faiss \
+  encoder \
+    --encoder castorini/tct_colbert-v2-hnp-msmarco \
+    --fields text \
+    --batch 32 \
+    --fp16
+
+#contriever
+!python -m pyserini.search.faiss \
+  --index /home/user/data/dense_retrieval/indom/embedding_nei_dense1 \
+  --topics /home/user/data/data.tsv \
+  --encoder castorini/tct_colbert-v2-hnp-msmarco \
+  --output /home/user/result/contriever_ret/nei_colbert_results.txt \
+  --batch-size 64 \
+  --threads 4 \
+  --hits 50
+'''
 ### Two-stage Ranker
