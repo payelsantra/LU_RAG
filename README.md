@@ -146,7 +146,7 @@ with open('/home/user/data/corpus/nei/NEI_bucket.jsonl','r',encoding='utf-8') as
 
 import pandas as pd
 
-test_data = pd.read_csv(' /home/user/data/data.csv')
+test_data = pd.read_csv('/home/user/data/data.csv')
 test_data_claim=dict(zip(test_data['id'],test_data['claim']))
 test_data_label=dict(zip(test_data['id'],test_data['label']))
 
@@ -231,17 +231,44 @@ query_dict = dict(query_dict)
 For this, you need to install Pyserini of Version: 0.16.1.
 ```
 ## indexing
+from pyserini.search.lucene import LuceneSearcher
+from pygaggle.rerank.transformer import MonoT5
+from pygaggle.rerank.base import Reranker, Query, Text
+import pandas as pd
+
 !python -m pyserini.index.lucene \
   --collection JsonCollection \
-  --input /media/user/Expansion/phd_new/my_desktop/payel/Fact_verification/emnlp_extension/fever/retrieval_INPUT/nei/ \
-  --index /media/user/Expansion/phd_new/my_desktop/payel/Fact_verification/emnlp_extension/fever/retrieval_INPUT/index_file_fever_tr/nei_16/ \
+  --input /home/user/data/corpus/nei/ \
+  --index /home/user/data/index_file/nei_16/ \
   --generator DefaultLuceneDocumentGenerator \
   --threads 1 \
   --storePositions --storeDocvectors --storeRaw
+
+# Load the test data
+test_data = pd.read_csv('/home/user/data/data.csv')
+id_claim_dict = dict(zip(list(test_data['id']), list(test_data['claim'])))
+
+# Step 1: BM25 Retrieval
+bm25_searcher = LuceneSearcher('/home/user/data/index_file/nei_16/')
+bm25_searcher.set_bm25(k1=0.9, b=0.4)
+
+# Step 2: Initialize monoT5 reranker
+reranker = MonoT5('castorini/monot5-base-msmarco')
+
+reranked_results = {}
+
+for query_id, query_text in id_claim_dict.items():
+    hits = bm25_searcher.search(query_text, k=100)  # Retrieve top 100 with BM25
+    query = Query(query_text)
+    texts = [Text(bm25_searcher.doc(hit.docid).raw(), {'docid': hit.docid}, 0) for hit in hits]
+    reranked = reranker.rerank(query, texts)
+    reranked = sorted(reranked, key=lambda x: x.score, reverse=True)  # Sort by score
+    reranked_results[query_id] = [(text.metadata['docid'], text.score) for text in reranked[:50]]
 ```
 
 ## Post-processing
 ### For Two-stage
+The post retrieval for BM25>>Contriever and BM25>>ColBERT are as follows:
 ```
 from tqdm import tqdm
 result_dict={}
@@ -258,7 +285,35 @@ for i in tqdm(query_dict):
             result_dict[query_id][key]=[evid,doc_id,'NEI']
 
 import pickle
-fl_p=open("/home/user/result/bm25_ret/contriever/bm25_dense_results.pickle","wb")
+fl_p=open("/home/user/result/bm25_ret/dense/bm25_dense_results.pickle","wb")
+pickle.dump(result_dict,fl_p)
+fl_p.close()
+```
+The post retrieval for BM25>>MonoT5 is as follows:
+```
+from tqdm import tqdm
+import json
+evidence_text={}
+with open('/home/user/data/corpus/nei/NEI_bucket.jsonl','r',encoding='utf-8') as f:
+    for idx,line in enumerate(f):
+        json_obj=json.loads(line.strip())
+        evidence_text[json_obj['id']]=json_obj['contents']
+
+result_dict={}
+for i in tqdm(reranked_results):
+    query_id=i
+    for k,l in enumerate(reranked_results[i]):
+        key=str(i)+"_"+str(k+1)
+        doc_id=l[0]
+        evid=evidence_text[int(doc_id)].strip()
+        if query_id in result_dict:
+            result_dict[query_id][key] = [evid, doc_id,'NEI']
+        else:
+            result_dict[query_id]={}
+            result_dict[query_id][key]=[evid,doc_id,'NEI']
+
+import pickle
+fl_p=open("/home/user/result/bm25_ret/dense/bm25_monot5_results.pickle","wb")
 pickle.dump(result_dict,fl_p)
 fl_p.close()
 ```
