@@ -31,7 +31,7 @@ Install via PyPI:
 ```
 $ pip install pyserini
 ```
-Pyserini is built on Python 3.10 (other versions might work, but YMMV) and Java 21 (due to its dependency on [Anserini](https://github.com/castorini/anserini)).
+Pyserini is built on Python 3.10 (other versions might work, but YMMV) and Java 21 (due to its dependency on [Anserini](https://github.com/castorini/anserini)). For all the retrievers we need to install Pyserini of Version: 0.44.0, only for bm25>>monot5 we need to install Pyserini of Version: 0.16.1.
 
 ## Data Preparation
 ### Data Preprocessing
@@ -176,8 +176,69 @@ query_dict = dict(query_dict)
 ```
 
 #### BM25»ColBERT
+```
+from pyserini.search.faiss import FaissSearcher
+from pyserini.encode import AutoQueryEncoder
+
+from pyserini.encode import TctColBertQueryEncoder
+from pyserini.search.lucene import LuceneSearcher
+from pyserini.search.faiss import FaissSearcher
+from pyserini.search.hybrid import HybridSearcher
+
+sparse_searcher = LuceneSearcher('/home/user/data/index_file/nei/')
+encoder = TctColBertQueryEncoder('castorini/tct_colbert-msmarco')
+dense_searcher = FaissSearcher('/home/user/data/dense_retrieval/indom/embedding_nei_dense1', encoder)
+hybrid_searcher = HybridSearcher(dense_searcher, sparse_searcher)
+
+import json
+evidence_text={}
+with open('/home/user/data/corpus/nei/NEI_bucket.jsonl','r',encoding='utf-8') as f:
+    for idx,line in enumerate(f):
+        json_obj=json.loads(line.strip())
+        evidence_text[json_obj['id']]=json_obj['contents']
+
+import pandas as pd
+
+test_data = pd.read_csv(' /home/user/data/data.csv')
+test_data_claim=dict(zip(test_data['id'],test_data['claim']))
+test_data_label=dict(zip(test_data['id'],test_data['label']))
 
 
+results=[]
+top_k=50
+for index, row in test_data.iterrows():
+    query_id = row['id']
+    query = row['claim']
+    hits = hybrid_searcher.search(query,k=top_k)
+
+    # Store results for each query
+    for i in range(len(hits)):  # Limit to top 10 results
+        results.append({
+            'query_id': query_id,
+            'query': query,
+            'docid': hits[i].docid,
+            'score': hits[i].score
+        })
+        
+from collections import defaultdict
+query_dict = defaultdict(list)
+
+for entry in results:
+    query_dict[entry["query_id"]].append(entry["docid"])
+query_dict = dict(query_dict)
+```
+#### BM25»MonoT5
+For this, you need to install Pyserini of Version: 0.16.1.
+```
+## indexing
+!python -m pyserini.index.lucene \
+  --collection JsonCollection \
+  --input /media/user/Expansion/phd_new/my_desktop/payel/Fact_verification/emnlp_extension/fever/retrieval_INPUT/nei/ \
+  --index /media/user/Expansion/phd_new/my_desktop/payel/Fact_verification/emnlp_extension/fever/retrieval_INPUT/index_file_fever_tr/nei_16/ \
+  --generator DefaultLuceneDocumentGenerator \
+  --threads 1 \
+  --storePositions --storeDocvectors --storeRaw
+```
 
 ## Post-processing
 ### For Two-stage
@@ -197,7 +258,7 @@ for i in tqdm(query_dict):
             result_dict[query_id][key]=[evid,doc_id,'NEI']
 
 import pickle
-fl_p=open("/home/user/result/bm25_ret/contriever/bm25_contriever_results.pickle","wb")
+fl_p=open("/home/user/result/bm25_ret/contriever/bm25_dense_results.pickle","wb")
 pickle.dump(result_dict,fl_p)
 fl_p.close()
 ```
