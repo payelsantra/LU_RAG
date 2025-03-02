@@ -33,7 +33,7 @@ Pyserini is built on Python 3.10 (other versions might work, but YMMV) and Java 
 
 ## Data Preparation
 ### Data Preprocessing
-
+Convert your csv file into a tsv file `/home/user/data/data.tsv`.
 ### Corpus Preprocessing
 
 ## How do I search?
@@ -118,3 +118,20 @@ For this paper, we uniformly retrieved the top 50 candidates.
   --hits 50
 ```
 ### Two-stage Ranker
+In our retrieve-and-rerank approach, we first retrieve the top 100 candidate documents using the same configurations as our single-stage retriever, and then re-ranks (also configured identically as explained in single-stage retriever) to narrow these down to the top 50 documents.
+
+#### BM25»Contriever
+```
+from pyserini.search.faiss import FaissSearcher
+from pyserini.encode import AutoQueryEncoder
+
+from pyserini.encode import TctColBertQueryEncoder
+from pyserini.search.lucene import LuceneSearcher
+from pyserini.search.faiss import FaissSearcher
+from pyserini.search.hybrid import HybridSearcher
+
+sparse_searcher = LuceneSearcher('/home/user/data/index_file/nei/')
+encoder = TctColBertQueryEncoder('facebook/contriever-msmarco')
+dense_searcher = FaissSearcher('/home/user/data/dense_retrieval/indom/embedding_nei_dense1', encoder)
+hybrid_searcher = HybridSearcher(dense_searcher, sparse_searcher)
+```
