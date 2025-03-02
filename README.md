@@ -267,6 +267,51 @@ for query_id, query_text in id_claim_dict.items():
 ```
 
 ## Post-processing
+### For Single-stage
+Download the ```train.jsonl``` file from https://fever.ai/dataset/fever.html. (As we have used Fever training data as source data)
+```
+import json
+with open("/data/train.jsonl", 'r') as json_file:
+    json_list = list(json_file)
+whole_dict={}
+for json_str in json_list:
+    result = json.loads(json_str)
+    id_nw=result['id']
+    label=result['label']
+    claim=result['claim']
+    whole_dict[id_nw]={"claim":claim}
+    whole_dict[id_nw].update({"label":label})
+
+def make_dict(give_dict,token):
+  updated_list={}
+  for i in give_dict:
+    token_element=give_dict[i][token]
+    updated_list[i]=token_element
+  return updated_list
+tr_claim_data_dict=make_dict(whole_dict,token="claim")
+
+result_bm25_path = "/home/user/result/bm25_ret/bm25_nei_ret.txt"
+result_dict={}
+with open(result_bm25_path, "r") as file:
+    for line in file:
+        parts=line.strip().split()
+        query_id = int(parts[0])
+        doc_id = tr_claim_data_dict[int(parts[2])].strip()  # Remove the "doc" prefix
+        score = float(parts[4])
+        evi_order=parts[3]
+        key = f"{query_id}_{evi_order}"
+        if query_id in result_dict:
+            result_dict[query_id][key] = [doc_id, int(parts[2]),'NEI']
+        else:
+            result_dict[query_id]={}
+            result_dict[query_id][key]=[doc_id,int(parts[2]),'NEI']
+
+import pickle
+fl_p=open("/home/user/result/bm25_test_ret.pickle","wb")
+pickle.dump(result_dict,fl_p)
+fl_p.close()
+```
+
 ### For Two-stage
 The post processing for BM25>>Contriever and BM25>>ColBERT are as follows:
 ```
