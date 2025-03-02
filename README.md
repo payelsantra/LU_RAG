@@ -9,6 +9,7 @@ This repository allows the replication of all results reported in the papers. In
 - [How do I search?](#search)
   - [Single-stage Ranker](#Single-stage)
   - [Two-stage Ranker](#Two-stage)
+- [Post-processing](#post-processing)
 -  [Replicating Results](#Replicating-Results)
     - [L-RAG](#L-RAG)
     - [U-RAG](#U-RAG)
