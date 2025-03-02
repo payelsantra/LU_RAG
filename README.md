@@ -38,5 +38,24 @@ Pyserini is built on Python 3.10 (other versions might work, but YMMV) and Java 
 
 ## How do I search?
 ### Single-stage Ranker
+For this paper, we uniformly retrieved the top 50 candidates.
+#### BM25
+```
+## indexing
+!python -m pyserini.index.lucene \
+  --collection JsonCollection \
+  --input /home/user/data/corpus/nei/ \
+  --index /home/user/data/index_file/nei/ \
+  --generator DefaultLuceneDocumentGenerator \
+  --threads 1 \
+  --storePositions --storeDocvectors --storeRaw
 
+## search
+!python -m pyserini.search.lucene \
+  --threads 16 --batch-size 128 \
+  --index /home/user/data/index_file/nei/ \
+  --topics /home/user/data/data.tsv \
+  --output /home/user/result/bm25_ret/bm25_nei_ret.txt \
+  --bm25 --k1 0.9 --b 0.4 --hits 100
+```
 ### Two-stage Ranker
