@@ -35,7 +35,22 @@ Pyserini is built on Python 3.10 (other versions might work, but YMMV) and Java 
 
 ## Data Preparation
 ### Data Preprocessing
-Convert your csv file into a tsv file `/home/user/data/data.tsv`.
+Convert your file into a tsv file `/home/user/data/data.tsv` of the format:
+```
+137334	Fox 2000 Pictures released the film Soul Food.
+111897	Telemundo is a English-language television network.
+89891	Damon Albarn's debut album was released in 2011.
+181634	There is a capital called Mogadishu.
+```
+Convert your file into a csv file `/home/user/data/data.csv` of the format:
+```
+Unnamed: 0,id,claim,label
+2,137334,Fox 2000 Pictures released the film Soul Food.,1
+4,111897,Telemundo is a English-language television network.,0
+5,89891,Damon Albarn's debut album was released in 2011.,0
+6,181634,There is a capital called Mogadishu.,1
+7,219028,Savages was exclusively a German film.,0
+```
 ### Corpus Preprocessing
 
 ## How do I search?
