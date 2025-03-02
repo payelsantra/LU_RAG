@@ -60,7 +60,7 @@ For this paper, we uniformly retrieved the top 50 candidates.
 ```
 
 #### Contriever-E2E
-'''
+```
 ##indexing
 !python -m pyserini.encode \
   input \
@@ -87,8 +87,9 @@ For this paper, we uniformly retrieved the top 50 candidates.
   --batch-size 64 \
   --threads 4 \
   --hits 50
-'''
+```
 #### ColBERT-E2E
+```
 ##indexing
 !python -m pyserini.encode \
   input \
@@ -115,5 +116,5 @@ For this paper, we uniformly retrieved the top 50 candidates.
   --batch-size 64 \
   --threads 4 \
   --hits 50
-'''
+```
 ### Two-stage Ranker
