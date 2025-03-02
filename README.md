@@ -78,7 +78,7 @@ For this paper, we uniformly retrieved the top 50 candidates.
     --batch 32 \
     --fp16
 
-#contriever
+#search
 !python -m pyserini.search.faiss \
   --index /home/user/data/dense_retrieval/indom/embedding_nei_dense1 \
   --topics /home/user/data/data.tsv \
@@ -107,7 +107,7 @@ For this paper, we uniformly retrieved the top 50 candidates.
     --batch 32 \
     --fp16
 
-#contriever
+#search
 !python -m pyserini.search.faiss \
   --index /home/user/data/dense_retrieval/indom/embedding_nei_dense1 \
   --topics /home/user/data/data.tsv \
