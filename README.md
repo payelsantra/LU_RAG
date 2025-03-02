@@ -58,4 +58,8 @@ For this paper, we uniformly retrieved the top 50 candidates.
   --output /home/user/result/bm25_ret/bm25_nei_ret.txt \
   --bm25 --k1 0.9 --b 0.4 --hits 100
 ```
+
+#### Contriever-E2E
+
+#### ColBERT-E2E
 ### Two-stage Ranker
